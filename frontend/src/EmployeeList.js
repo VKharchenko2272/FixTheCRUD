@@ -1,11 +1,19 @@
 import React from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const EmployeeList = ({ employees, fetchEmployees }) => {
     // Add Delete functionality
     // Remove the comment for axios 
-
+    const handleDelete = async (id) => {
+        try{
+            await axios.delete(`http://localhost:3001/employees/${id}`);
+            fetchEmployees();
+        }
+        catch (error) {
+            console.error('Error:', error);
+        }
+    };
     return (
         <table className="table table-striped">
             <thead>
@@ -23,7 +31,7 @@ const EmployeeList = ({ employees, fetchEmployees }) => {
                         <td>{employee.position}</td>
                         <td>{employee.salary}</td>
                         <td>
-                            <button className="btn btn-danger" >Delete</button>
+                            <button onClick={() => handleDelete(employee.id)} className="btn btn-danger" >Delete</button>
                         </td>
                     </tr>
                 ))}

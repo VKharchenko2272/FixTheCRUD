@@ -37,7 +37,7 @@ app.get('/employees', (req, res) => {
 
 app.post('/employees', (req, res) => {
     const { name, position, salary } = req.body;
-    db.run("INSERT INTO employees (name, position, salary) VALUES (?, ?, ?)", [name, position, salary], function(err) {
+    db.run("INSERT INTO employees (name, position, salary) VALUES (?, ?, ?)", [name, position, salary], function (err) {
         if (err) {
             return res.status(500).send(err);
         }
@@ -48,7 +48,7 @@ app.post('/employees', (req, res) => {
 app.put('/employees/:id', (req, res) => {
     const { id } = req.params;
     const { name, position, salary } = req.body;
-    db.run("UPDATE employees SET name = ?, position = ?, salary = ? WHERE id = ?", [name, position, salary, id], function(err) {
+    db.run("UPDATE employees SET name = ?, position = ?, salary = ? WHERE id = ?", [name, position, salary, id], function (err) {
         if (err) {
             return res.status(500).send(err);
         }
@@ -57,7 +57,21 @@ app.put('/employees/:id', (req, res) => {
 });
 
 // Add delete functionality
+app.delete('/employees/:id', (req, res) => {
+    const { id } = req.params;
+    db.run("DELETE FROM employees WHERE id = ?", [id], function (err) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        if (this.changes === 0) {
+            return res.status(404).send({ error: 'No employee' });
+        }
+        res.json({ message: 'Successfully deleted user', deletedId: id });
+    });
+
+});
 
 app.listen(3001, () => {
     console.log('Server is running on port 3001');
 });
+ 
